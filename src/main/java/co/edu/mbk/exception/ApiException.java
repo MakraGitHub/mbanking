@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +18,20 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class ApiException {
+
+    //Exception for updateById.
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ResponseStatusException.class)
+    public BaseError<?> handleServiceException(ResponseStatusException e){
+        return BaseError.builder()
+                .status(false)
+                .code(e.getStatusCode().value())
+                .message("Something went wrong, please check in error detail!")
+                .timestamp(LocalDateTime.now())
+                .errors(e.getReason())
+                .build();
+    }
+    //Exception catch to field errors in field detail.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public BaseError<?> handleValidationException(MethodArgumentNotValidException e) {
