@@ -17,6 +17,19 @@ import java.time.LocalDateTime;
 public class UserRestController {
 
     private final UserService userService;
+
+    @GetMapping("/{id}")
+    public BaseApi<?> findById(@PathVariable Integer id){
+        UserDto userDto = userService.findById(id);
+        return BaseApi.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User has been found")
+                .timestamp(LocalDateTime.now())
+                .data(userDto)
+                .build();
+    }
+
     @PutMapping("/{id}")
     public BaseApi<?> updateById(@PathVariable Integer id,
                                  @Valid @RequestBody SaveUserDto saveUserDto){
