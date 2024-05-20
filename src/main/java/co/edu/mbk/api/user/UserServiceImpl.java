@@ -19,6 +19,17 @@ public class UserServiceImpl implements UserService{
     private final UserMapstruct userMapstruct;
 
     @Override
+    public UserDto deleteById(Integer id) {
+        if(userMapper.existsById(id)){
+            UserDto userDto = findById(id);
+            userMapper.updateIsDeleted(id,true);
+            return userDto;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                String.format("User with id =%d is not found id DB",id));
+    }
+
+    @Override
     public PageInfo<UserDto> findWithPaging(int pageNum, int pageSize) {
         //TODO: call method select in mybatis mapper
         PageInfo<User> userDtoPageInfo = PageHelper.startPage(pageNum,pageSize)
@@ -30,7 +41,7 @@ public class UserServiceImpl implements UserService{
     public UserDto findById(Integer id) {
         User user = userMapper.selectById(id).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("User with id =%d is not found")));
+                        String.format("User with id =%d is not found",id)));
         return userMapstruct.userToUserDto(user);
     }
 

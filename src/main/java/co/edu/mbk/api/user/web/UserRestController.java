@@ -19,6 +19,18 @@ public class UserRestController {
 
     private final UserService userService;
 
+    @DeleteMapping("/{id}")
+    public BaseApi<?> delete(@PathVariable Integer id){
+        UserDto userDto = userService.deleteById(id);
+        return BaseApi.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User has been deleted")
+                .timestamp(LocalDateTime.now())
+                .data(userDto)
+                .build();
+    }
+
     @GetMapping
     public BaseApi<?> findWithPaging(
             @RequestParam(required = false, defaultValue = "1")int pageNum,

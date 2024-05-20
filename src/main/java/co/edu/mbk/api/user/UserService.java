@@ -5,7 +5,7 @@ import co.edu.mbk.api.user.web.UserDto;
 import com.github.pagehelper.PageInfo;
 
 public interface UserService {
-
+    UserDto deleteById(Integer id);
    UserDto findById(Integer id);
   PageInfo<UserDto> findWithPaging(int pageNum, int pageSize);
 
