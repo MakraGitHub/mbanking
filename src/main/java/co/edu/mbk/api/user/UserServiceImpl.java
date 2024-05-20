@@ -2,6 +2,8 @@ package co.edu.mbk.api.user;
 
 import co.edu.mbk.api.user.web.SaveUserDto;
 import co.edu.mbk.api.user.web.UserDto;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,14 @@ public class UserServiceImpl implements UserService{
 
     private final UserMapper userMapper;
     private final UserMapstruct userMapstruct;
+
+    @Override
+    public PageInfo<UserDto> findWithPaging(int pageNum, int pageSize) {
+        //TODO: call method select in mybatis mapper
+        PageInfo<User> userDtoPageInfo = PageHelper.startPage(pageNum,pageSize)
+                .doSelectPageInfo(userMapper::select);
+        return userMapstruct.userPageInfoToUserDtoPageInfo(userDtoPageInfo);
+    }
 
     @Override
     public UserDto findById(Integer id) {

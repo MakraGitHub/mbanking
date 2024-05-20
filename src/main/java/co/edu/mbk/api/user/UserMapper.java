@@ -2,6 +2,8 @@ package co.edu.mbk.api.user;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -33,4 +35,7 @@ public interface UserMapper {
             @Result(column = "student_card_id", property = "studentCardId")
     })
     Optional<User> selectById(@Param("id") Integer id);
+
+    @SelectProvider(type = UserProvider.class, method = "buildSelectWithPagingSql")
+    List<User> select();
 }

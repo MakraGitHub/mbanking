@@ -2,6 +2,7 @@ package co.edu.mbk.api.user.web;
 
 import co.edu.mbk.api.user.UserService;
 import co.edu.mbk.base.BaseApi;
+import com.github.pagehelper.PageInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,21 @@ import java.time.LocalDateTime;
 public class UserRestController {
 
     private final UserService userService;
+
+    @GetMapping
+    public BaseApi<?> findWithPaging(
+            @RequestParam(required = false, defaultValue = "1")int pageNum,
+            @RequestParam(required = false, defaultValue = "25")int pageSize){
+        PageInfo<UserDto> userDtoPageInfo = userService.findWithPaging(pageNum, pageSize);
+
+        return BaseApi.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been found")
+                .timestamp(LocalDateTime.now())
+                .data(userDtoPageInfo)
+                .build();
+    }
 
     @GetMapping("/{id}")
     public BaseApi<?> findById(@PathVariable Integer id){
