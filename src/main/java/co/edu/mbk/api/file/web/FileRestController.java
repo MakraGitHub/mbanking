@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,5 +44,25 @@ public class FileRestController {
                 .build();
     }
 
+    @GetMapping("/{name}")
+    public BaseApi<?> findByName(@PathVariable String name)
+            throws IOException {
 
+        FileDto fileDto = fileService.findByName(name);
+
+        return BaseApi.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("File has been found")
+                .timestamp(LocalDateTime.now())
+                .data(fileDto)
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{name}")
+    public void delete(@PathVariable String name) {
+        fileService.deleteFile(name);
+
+    }
 }
