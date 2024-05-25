@@ -4,13 +4,18 @@ import co.edu.mbk.api.file.FileService;
 import co.edu.mbk.base.BaseApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/files")
@@ -65,4 +70,13 @@ public class FileRestController {
         fileService.deleteFile(name);
 
     }
+    @GetMapping("/download/{name}")
+    public ResponseEntity<?> download(@PathVariable String name){
+        Resource resource = fileService.download(name);
+        return  ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=" + resource.getFilename())
+                .body(resource);
+    }
+
 }

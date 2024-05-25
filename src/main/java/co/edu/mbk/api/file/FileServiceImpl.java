@@ -59,10 +59,14 @@ public class FileServiceImpl implements FileService{
                     .extension(fileUtil.getExtension(resource.getFilename()))
                     .size(resource.contentLength())
                     .url(fileUtil.getUrl(resource.getFilename()))
+                    .downloadUrl(fileUtil.getDownloadUrl(resource.getFilename()))
                     .build();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "File is not found");
     }
-
+    @Override
+    public Resource download(String name) {
+        return fileUtil.load(name);
+    }
 }
